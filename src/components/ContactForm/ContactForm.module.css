@@ -1,0 +1,39 @@
+.itemContainer{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  gap: 0.5rem;
+  border: 2px solid #007bff;
+  padding: 20px;
+  min-height: 300px;
+  width: 300px;
+}
+.item input {
+  padding: 10px;
+  width: 80%;
+  height: 30px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.item button {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  margin-left: -30px;
+  height: 50px;
+}
+
+.formField > button {
+  margin-top: 30px;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+  width: 40%;
+}

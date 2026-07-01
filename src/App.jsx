@@ -11,7 +11,7 @@ class App extends Component {
   };
 
   componentDidMount() {
-    contactsLocal = JSON.parse(localStorage.getItem('contacts'));
+    const contactsLocal = JSON.parse(localStorage.getItem('contacts'));
     if (!contactsLocal) {
       this.setState({
         contacts: [],
@@ -25,13 +25,18 @@ class App extends Component {
 
   render() {
     return (
-      <>
+      <div className="app">
         <header>
           <h1>Contact List</h1>
         </header>
-        <ContactList contacts={contacts} />
-        <ContactForm mode={mode} currentContact={currentContact} />
-      </>
+        <div className="app-main">
+          <ContactList contacts={this.state.contacts} />
+          <ContactForm
+            mode={this.state.mode}
+            currentContact={this.state.currentContact}
+          />
+        </div>
+      </div>
     );
   }
 }
