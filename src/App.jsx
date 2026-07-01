@@ -1,13 +1,39 @@
-import { useState } from 'react'
-import './App.css'
+import { Component } from 'react';
+import ContactList from './components/ContactList/ContactList';
+import ContactForm from './components/ContactForm/ContactForm';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+class App extends Component {
+  state = {
+    contacts: [],
+    currentContact: {},
+    mode: true,
+  };
 
-  return (
-    <>
-    </>
-  )
+  componentDidMount() {
+    contactsLocal = JSON.parse(localStorage.getItem('contacts'));
+    if (!contactsLocal) {
+      this.setState({
+        contacts: [],
+      });
+    } else {
+      this.setState({
+        contacts: [...contactsLocal],
+      });
+    }
+  }
+
+  render() {
+    return (
+      <>
+        <header>
+          <h1>Contact List</h1>
+        </header>
+        <ContactList contacts={contacts} />
+        <ContactForm mode={mode} currentContact={currentContact} />
+      </>
+    );
+  }
 }
 
-export default App
+export default App;
