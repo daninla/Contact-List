@@ -7,7 +7,8 @@ class App extends Component {
   state = {
     contacts: [],
     currentContact: {},
-    mode: true,
+    mode: false,
+    inputMode: false,
   };
 
   componentDidMount() {
@@ -34,8 +35,25 @@ class App extends Component {
           <ContactForm
             mode={this.state.mode}
             currentContact={this.state.currentContact}
+            inputMode={this.state.inputMode}
           />
         </div>
+        <button
+          className='new-contact-button'
+          onClick={() => {
+            this.setState({
+              currentContact: {
+                firstName: '',
+                lastName: '',
+                phone: '',
+                email: '',
+              },
+              inputMode: true,
+            });
+          }}
+        >
+          New
+        </button>
       </div>
     );
   }

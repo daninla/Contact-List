@@ -23,3 +23,15 @@
     display: flex;
     justify-content: space-around;
 }
+
+.new-contact-button{
+  width: 200px;
+  padding: 10px;
+  border-radius: 5px;
+  border: #000 1px solid;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+  margin-top: -50px;
+  margin-left: 40px;
+}
