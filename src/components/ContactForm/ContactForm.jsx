@@ -28,11 +28,18 @@ export class InputComponent extends Component {
 
 export class ContactForm extends Component {
   render() {
-    const { mode, currentContact, inputMode, changeInputValue, saveContact } =
-      this.props;
+    const {
+      mode,
+      currentContact,
+      inputMode,
+      changeInputValue,
+      saveContact,
+      errorMessage,
+    } = this.props;
+
     return (
       <>
-        <form className={styles.formField}>
+        <form className={styles.formField} onSubmit={saveContact}>
           <div className={styles.itemContainer}>
             <InputComponent
               changeInputValue={changeInputValue}
@@ -63,12 +70,18 @@ export class ContactForm extends Component {
               placeholder="Email Address"
             />
           </div>
-          <div style={{ width: '100%', alignItems: 'center', display: 'flex', justifyContent: 'center' }}>
-            <button
-              onClick={saveContact}
-              className={styles.saveButton}
-              type="submit"
-            >
+          {errorMessage && (
+            <p style={{ color: 'red', textAlign: 'center' }}>{errorMessage}</p>
+          )}
+          <div
+            style={{
+              width: '100%',
+              alignItems: 'center',
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <button className={styles.saveButton} type="submit">
               Save
             </button>
             {mode === 'add' ? null : (

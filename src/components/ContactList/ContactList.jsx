@@ -5,14 +5,18 @@ import styles from './ContactList.module.css';
 
 export class ContactList extends Component {
   render() {
-    const { contacts } = this.props;
+    const { contacts, editContact } = this.props;
     return (
       <>
         <div className={styles.contactMainList}>
           <h2>Contact List</h2>
           <ul className={styles.contactList}>
             {contacts.map((contact) => (
-              <ContactItem key={nanoid()} contact={contact} />
+              <ContactItem
+                key={contact.id ?? nanoid()}
+                contact={contact}
+                editContact={editContact}
+              />
             ))}
           </ul>
         </div>

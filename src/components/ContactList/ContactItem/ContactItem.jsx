@@ -6,7 +6,10 @@ export class ContactItem extends Component {
     const { contact } = this.props;
     return (
       <>
-        <li className={styles.contactItem}>
+        <li
+          className={styles.contactItem}
+          onDoubleClick={() => this.props.editContact(contact)}
+        >
           <div style={{ display: 'flex', gap: '10px', marginLeft: '10px' }}>
             <p>{contact.firstName}</p>
             <p>{contact.lastName}</p>

@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import ContactList from './components/ContactList/ContactList';
 import ContactForm from './components/ContactForm/ContactForm';
+import { nanoid } from 'nanoid';
 import './App.css';
 
 class App extends Component {
@@ -13,6 +14,7 @@ class App extends Component {
       email: '',
     },
     mode: 'add',
+    errorMessage: '',
   };
 
   componentDidMount() {
@@ -34,9 +36,27 @@ class App extends Component {
     });
   };
 
-  saveContact = () => {
-    const { contacts, currentContact, mode } = this.state;
+  validateContact = (contact) => {
+    const { firstName, lastName, phone, email } = contact;
+    if (!firstName || !lastName || !phone || !email) {
+      return false;
+    }
+    if (!/^\d{10}$/.test(phone)) {
+      return false;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return false;
+    }
+    return true;
+  };
 
+  saveContact = (event) => {
+    event.preventDefault();
+    const { contacts, currentContact, mode } = this.state;
+    if (!this.validateContact(currentContact)) {
+      this.setState({ errorMessage: 'Данные заполнены некорректно' });
+      return;
+    }
     if (
       currentContact.firstName === '' ||
       currentContact.lastName === '' ||
@@ -46,10 +66,12 @@ class App extends Component {
       return;
     }
 
+    this.setState({ errorMessage: '' });
     if (mode === 'add') {
+      const newContact = { ...currentContact, id: nanoid() };
       this.setState(
         {
-          contacts: [...contacts, currentContact],
+          contacts: [...contacts, newContact],
           currentContact: {
             firstName: '',
             lastName: '',
@@ -83,6 +105,13 @@ class App extends Component {
     }
   };
 
+  editContact = (contact) => {
+    this.setState({
+      currentContact: contact,
+      mode: 'edit',
+    });
+  };
+
   render() {
     return (
       <div className="app">
@@ -90,13 +119,17 @@ class App extends Component {
           <h1>Contact List</h1>
         </header>
         <div className="app-main">
-          <ContactList contacts={this.state.contacts} />
+          <ContactList
+            contacts={this.state.contacts}
+            editContact={this.editContact}
+          />
           <ContactForm
             mode={this.state.mode}
             currentContact={this.state.currentContact}
             inputMode={this.state.inputMode}
             changeInputValue={this.changeInputValue}
             saveContact={this.saveContact}
+            errorMessage={this.state.errorMessage}
           />
         </div>
         <button
@@ -111,6 +144,7 @@ class App extends Component {
               },
               inputMode: true,
               mode: 'add',
+              errorMessage: '',
             });
           }}
         >
