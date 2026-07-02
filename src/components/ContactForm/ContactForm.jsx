@@ -11,10 +11,8 @@ export class ContactForm extends Component {
     const {
       mode,
       currentContact,
-      inputMode,
       changeInputValue,
       saveContact,
-      errorMessage,
       deleteContact,
     } = this.props;
 
@@ -51,9 +49,6 @@ export class ContactForm extends Component {
               placeholder="Email Address"
             />
           </div>
-          {errorMessage && (
-            <p style={{ color: 'red', textAlign: 'center' }}>{errorMessage}</p>
-          )}
           <div
             style={{
               width: '100%',

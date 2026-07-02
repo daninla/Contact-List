@@ -1,20 +1,22 @@
 import { Component } from 'react';
 import ContactList from './components/ContactList/ContactList';
 import ContactForm from './components/ContactForm/ContactForm';
+import { saveToLocalStorage } from './localStorage';
 import { nanoid } from 'nanoid';
 import './App.css';
+
+const EMPTY_CONTACT = {
+  firstName: '',
+  lastName: '',
+  phone: '',
+  email: '',
+};
 
 class App extends Component {
   state = {
     contacts: [],
-    currentContact: {
-      firstName: '',
-      lastName: '',
-      phone: '',
-      email: '',
-    },
+    currentContact: { ...EMPTY_CONTACT },
     mode: 'add',
-    errorMessage: '',
   };
 
   componentDidMount() {
@@ -36,76 +38,32 @@ class App extends Component {
     });
   };
 
-  validateContact = (contact) => {
-    const { firstName, lastName, phone, email } = contact;
-    if (!firstName || !lastName || !phone || !email) {
-      return false;
-    }
-    if (!/^\d{10}$/.test(phone)) {
-      return false;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return false;
-    }
-    return true;
-  };
-
   saveContactAdd = (currentContact, contacts) => {
-    const newContact = { ...currentContact, id: nanoid() };
-    this.setState(
-      {
-        contacts: [...contacts, newContact],
-        currentContact: {
-          firstName: '',
-          lastName: '',
-          phone: '',
-          email: '',
-        },
-      },
-      () => {
-        localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-      },
-    );
+    const updatedContacts = [...contacts, { ...currentContact, id: nanoid() }];
+
+    this.setState({
+      contacts: updatedContacts,
+      currentContact: { ...EMPTY_CONTACT },
+    });
+
+    saveToLocalStorage(updatedContacts);
   };
 
   saveContactEdit = (currentContact, contacts) => {
     const updatedContacts = contacts.map((contact) =>
       contact.id === currentContact.id ? currentContact : contact,
     );
-    this.setState(
-      {
-        contacts: updatedContacts,
-        currentContact: {
-          firstName: '',
-          lastName: '',
-          phone: '',
-          email: '',
-        },
-        mode: 'add',
-      },
-      () => {
-        localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-      },
-    );
+    this.setState({
+      contacts: updatedContacts,
+      currentContact: { ...EMPTY_CONTACT },
+      mode: 'add',
+    });
+    saveToLocalStorage(updatedContacts);
   };
 
   saveContact = (event) => {
     event.preventDefault();
     const { contacts, currentContact, mode } = this.state;
-    if (!this.validateContact(currentContact)) {
-      this.setState({ errorMessage: 'Данные заполнены некорректно' });
-      return;
-    }
-    if (
-      currentContact.firstName === '' ||
-      currentContact.lastName === '' ||
-      currentContact.phone === '' ||
-      currentContact.email === ''
-    ) {
-      return;
-    }
-
-    this.setState({ errorMessage: '' });
     if (mode === 'add') {
       this.saveContactAdd(currentContact, contacts);
     } else if (mode === 'edit') {
@@ -113,23 +71,22 @@ class App extends Component {
     }
   };
 
-  
   editContact = (contact) => {
     this.setState({
-      currentContact: contact,
+      currentContact: { ...contact },
       mode: 'edit',
     });
   };
 
   deleteContact = (id) => {
-    this.setState(
-      {
-        contacts: this.state.contacts.filter((contact) => contact.id !== id),
-      },
-      () => {
-        localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-      },
+    const updatedContacts = this.state.contacts.filter(
+      (contact) => contact.id !== id,
     );
+
+    this.setState({
+      contacts: updatedContacts,
+    });
+    saveToLocalStorage(updatedContacts);
   };
 
   render() {
@@ -141,16 +98,14 @@ class App extends Component {
         <div className="app-main">
           <ContactList
             contacts={this.state.contacts}
-            editContact={this.editContact}
             deleteContact={this.deleteContact}
+            editContact={this.editContact}
           />
           <ContactForm
             mode={this.state.mode}
             currentContact={this.state.currentContact}
-            inputMode={this.state.inputMode}
             changeInputValue={this.changeInputValue}
             saveContact={this.saveContact}
-            errorMessage={this.state.errorMessage}
             deleteContact={this.deleteContact}
           />
         </div>
@@ -166,7 +121,6 @@ class App extends Component {
               },
               inputMode: true,
               mode: 'add',
-              errorMessage: '',
             });
           }}
         >
