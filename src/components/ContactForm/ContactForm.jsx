@@ -27,6 +27,10 @@ export class InputComponent extends Component {
 }
 
 export class ContactForm extends Component {
+  clickByDelete = () => {
+    this.props.deleteContact(this.props.currentContact.id);
+  };
+
   render() {
     const {
       mode,
@@ -35,6 +39,7 @@ export class ContactForm extends Component {
       changeInputValue,
       saveContact,
       errorMessage,
+      deleteContact,
     } = this.props;
 
     return (
@@ -85,7 +90,11 @@ export class ContactForm extends Component {
               Save
             </button>
             {mode === 'add' ? null : (
-              <button className={styles.deleteButton} type="submit">
+              <button
+                className={styles.deleteButton}
+                onClick={this.clickByDelete}
+                type="submit"
+              >
                 Delete
               </button>
             )}

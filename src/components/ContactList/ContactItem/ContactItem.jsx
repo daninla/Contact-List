@@ -3,7 +3,7 @@ import styles from './ContactItem.module.css';
 
 export class ContactItem extends Component {
   render() {
-    const { contact } = this.props;
+    const { contact, deleteContact } = this.props;
     return (
       <>
         <li
@@ -14,7 +14,7 @@ export class ContactItem extends Component {
             <p>{contact.firstName}</p>
             <p>{contact.lastName}</p>
           </div>
-          <span>X</span>
+          <span onClick={() => deleteContact(contact.id)}>X</span>
         </li>
       </>
     );

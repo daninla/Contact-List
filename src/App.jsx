@@ -112,6 +112,17 @@ class App extends Component {
     });
   };
 
+  deleteContact = (id) => {
+    this.setState(
+      {
+        contacts: this.state.contacts.filter((contact) => contact.id !== id),
+      },
+      () => {
+        localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+      },
+    );
+  };
+
   render() {
     return (
       <div className="app">
@@ -122,6 +133,7 @@ class App extends Component {
           <ContactList
             contacts={this.state.contacts}
             editContact={this.editContact}
+            deleteContact={this.deleteContact}
           />
           <ContactForm
             mode={this.state.mode}
@@ -130,6 +142,7 @@ class App extends Component {
             changeInputValue={this.changeInputValue}
             saveContact={this.saveContact}
             errorMessage={this.state.errorMessage}
+            deleteContact={this.deleteContact}
           />
         </div>
         <button
