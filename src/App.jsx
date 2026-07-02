@@ -50,6 +50,45 @@ class App extends Component {
     return true;
   };
 
+  saveContactAdd = (currentContact, contacts) => {
+    const newContact = { ...currentContact, id: nanoid() };
+    this.setState(
+      {
+        contacts: [...contacts, newContact],
+        currentContact: {
+          firstName: '',
+          lastName: '',
+          phone: '',
+          email: '',
+        },
+      },
+      () => {
+        localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+      },
+    );
+  };
+
+  saveContactEdit = (currentContact, contacts) => {
+    const updatedContacts = contacts.map((contact) =>
+      contact.id === currentContact.id ? currentContact : contact,
+    );
+    this.setState(
+      {
+        contacts: updatedContacts,
+        currentContact: {
+          firstName: '',
+          lastName: '',
+          phone: '',
+          email: '',
+        },
+        mode: 'add',
+      },
+      () => {
+        localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+      },
+    );
+  };
+
   saveContact = (event) => {
     event.preventDefault();
     const { contacts, currentContact, mode } = this.state;
@@ -68,43 +107,13 @@ class App extends Component {
 
     this.setState({ errorMessage: '' });
     if (mode === 'add') {
-      const newContact = { ...currentContact, id: nanoid() };
-      this.setState(
-        {
-          contacts: [...contacts, newContact],
-          currentContact: {
-            firstName: '',
-            lastName: '',
-            phone: '',
-            email: '',
-          },
-        },
-        () => {
-          localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-        },
-      );
+      this.saveContactAdd(currentContact, contacts);
     } else if (mode === 'edit') {
-      const updatedContacts = contacts.map((contact) =>
-        contact.id === currentContact.id ? currentContact : contact,
-      );
-      this.setState(
-        {
-          contacts: updatedContacts,
-          currentContact: {
-            firstName: '',
-            lastName: '',
-            phone: '',
-            email: '',
-          },
-          mode: 'add',
-        },
-        () => {
-          localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-        },
-      );
+      this.saveContactEdit(currentContact, contacts);
     }
   };
 
+  
   editContact = (contact) => {
     this.setState({
       currentContact: contact,

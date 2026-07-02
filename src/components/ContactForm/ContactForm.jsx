@@ -1,30 +1,6 @@
 import React, { Component } from 'react';
 import styles from './ContactForm.module.css';
-
-export class InputComponent extends Component {
-  setTextfromInput = (event) => {
-    this.props.changeInputValue(event.target.value, event.target.name);
-  };
-
-  render() {
-    const { value, name, id, placeholder, changeInputValue } = this.props;
-    return (
-      <div className={styles.item}>
-        <input
-          onChange={this.setTextfromInput}
-          value={value}
-          type="text"
-          name={name}
-          id={id}
-          placeholder={placeholder}
-        />
-        <span onClick={() => this.props.changeInputValue('', this.props.name)}>
-          X
-        </span>
-      </div>
-    );
-  }
-}
+import ContactInput from './ContactInput/ContactInput'
 
 export class ContactForm extends Component {
   clickByDelete = () => {
@@ -46,28 +22,28 @@ export class ContactForm extends Component {
       <>
         <form className={styles.formField} onSubmit={saveContact}>
           <div className={styles.itemContainer}>
-            <InputComponent
+            <ContactInput
               changeInputValue={changeInputValue}
               value={currentContact.firstName}
               name="firstName"
               id="firstName"
               placeholder="First Name"
             />
-            <InputComponent
+            <ContactInput
               changeInputValue={changeInputValue}
               value={currentContact.lastName}
               name="lastName"
               id="lastName"
               placeholder="Last Name"
             />
-            <InputComponent
+            <ContactInput
               changeInputValue={changeInputValue}
               value={currentContact.phone}
               name="phone"
               id="phone"
               placeholder="Phone Number"
             />
-            <InputComponent
+            <ContactInput
               changeInputValue={changeInputValue}
               value={currentContact.email}
               name="email"

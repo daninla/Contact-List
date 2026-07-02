@@ -14,3 +14,27 @@
   height: 300px;
   overflow-y: auto;
 }
+
+@media (max-width: 900px) {
+  .contactMainList {
+    width: 100%;
+  }
+
+  .contactList {
+    height: auto;
+    max-height: 300px;
+  }
+}
+
+@media (max-width: 600px) {
+  .contactList {
+    gap: 12px;
+  }
+}
+@media (max-width: 480px) {
+  .contactList {
+    height: auto;
+    max-height: 250px;
+    gap: 8px;
+  }
+}
