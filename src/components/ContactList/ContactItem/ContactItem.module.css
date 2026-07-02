@@ -1,0 +1,23 @@
+.contactItem {
+  display: flex;
+  gap: 0;
+  border: 1px black solid;
+  width: 60%;
+  align-items: stretch;
+  justify-content: space-between;
+  height: 50px;
+}
+
+.contactItem span {
+  padding: 0;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  height: 100%;
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}

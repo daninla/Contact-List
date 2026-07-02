@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
+import styles from './ContactItem.module.css';
 
 export class ContactItem extends Component {
   render() {
     const { contact } = this.props;
     return (
       <>
-        <li className="contact-item">
-          <p className="contact-item">{contact.firstName}</p>
-          <p className="contact-item">{contact.lastName}</p>
-          <p className="contact-item">{contact.phone}</p>
-          <p className="contact-item">{contact.email}</p>
+        <li className={styles.contactItem}>
+          <div style={{ display: 'flex', gap: '10px', marginLeft: '10px' }}>
+            <p>{contact.firstName}</p>
+            <p>{contact.lastName}</p>
+          </div>
+          <span>X</span>
         </li>
       </>
     );

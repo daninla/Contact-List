@@ -1,0 +1,16 @@
+.contactMainList {
+  text-align: center;
+}
+
+.contactList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  height: 300px;
+  overflow-y: auto;
+}

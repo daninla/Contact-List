@@ -1,55 +1,63 @@
+.formField{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1.5rem;
+}
+
 .itemContainer{
   display: flex;
   flex-direction: column;
+  align-items: center;
   margin-bottom: 1rem;
-  gap: 0.5rem;
-  border: 2px solid #007bff;
+  gap: 1.5rem;
+  border: 2px solid #badafc;
   padding: 20px;
   min-height: 300px;
   width: 300px;
 }
+
+.item {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
 .item input {
-  padding: 10px;
-  width: 80%;
+  width: 100%;
   height: 30px;
   border-radius: 5px;
   border: 1px solid #ccc;
 }
 
-.item button {
-  padding: 10px;
+.item span {
+  padding: 7px;
   border-radius: 5px;
   border: none;
   background-color: #007bff;
   color: white;
   cursor: pointer;
-  margin-left: -30px;
-  height: 50px;
+  margin-left: -25px;
 }
 
 .saveButton{
-  margin-top: 30px;
   padding: 10px;
   border-radius: 5px;
   border: none;
   background-color: #28a745;
   color: white;
   cursor: pointer;
-  width: 40%;
+  width: 20%;
 }
 
-fieldset:disabled {
-  opacity: 0.5;
-  pointer-events: none;
-}
 .deleteButton{
-  margin-top: 30px;
   padding: 10px;
   border-radius: 5px;
   border: none;
   background-color: #dc3545;
   color: white;
   cursor: pointer;
-  width: 40%;
+  width: 20%;
   margin-left: 50px;
 }
