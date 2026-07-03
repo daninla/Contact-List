@@ -1,49 +1,71 @@
 import React, { Component } from 'react';
 import styles from './ContactForm.module.css';
-import ContactInput from './ContactInput/ContactInput'
+import ContactInput from './ContactInput/ContactInput';
 
 export class ContactForm extends Component {
+  state = {
+    ...this.props.currentContact,
+  };
+
+
   clickByDelete = () => {
     this.props.deleteContact(this.props.currentContact.id);
   };
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.currentContact !== prevState.prevContact) {
+      return {
+        ...nextProps.currentContact,
+        prevContact: nextProps.currentContact,
+      };
+    }
+
+    return null;
+  }
+
+  changeInputValue = (value, nameInput) => {
+    this.setState({
+      [nameInput]: value,
+    });
+  };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.props.saveContact(this.state);
+  };
+
   render() {
-    const {
-      mode,
-      currentContact,
-      changeInputValue,
-      saveContact,
-      deleteContact,
-    } = this.props;
+    const { mode, currentContact, saveContact, deleteContact } = this.props;
+    const { firstName, lastName, phone, email } = this.state;
 
     return (
       <>
-        <form className={styles.formField} onSubmit={saveContact}>
+        <form className={styles.formField} onSubmit={this.handleSubmit}>
           <div className={styles.itemContainer}>
             <ContactInput
-              changeInputValue={changeInputValue}
-              value={currentContact.firstName}
+              changeInputValue={this.changeInputValue}
+              value={firstName}
               name="firstName"
               id="firstName"
               placeholder="First Name"
             />
             <ContactInput
-              changeInputValue={changeInputValue}
-              value={currentContact.lastName}
+              changeInputValue={this.changeInputValue}
+              value={lastName}
               name="lastName"
               id="lastName"
               placeholder="Last Name"
             />
             <ContactInput
-              changeInputValue={changeInputValue}
-              value={currentContact.phone}
+              changeInputValue={this.changeInputValue}
+              value={phone}
               name="phone"
               id="phone"
               placeholder="Phone Number"
             />
             <ContactInput
-              changeInputValue={changeInputValue}
-              value={currentContact.email}
+              changeInputValue={this.changeInputValue}
+              value={email}
               name="email"
               id="email"
               placeholder="Email Address"
@@ -60,7 +82,7 @@ export class ContactForm extends Component {
             <button className={styles.saveButton} type="submit">
               Save
             </button>
-            {mode === 'add' ? null : (
+            {!this.props.currentContact.id ? null : (
               <button
                 className={styles.deleteButton}
                 onClick={this.clickByDelete}

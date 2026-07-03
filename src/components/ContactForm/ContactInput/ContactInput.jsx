@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
-import styles from './ContactInput.module.css'
+import styles from './ContactInput.module.css';
 
 export class ContactInput extends Component {
-  setTextfromInput = (event) => {
-    this.props.changeInputValue(event.target.value, event.target.name);
-  };
-
   render() {
     const { value, name, id, placeholder, changeInputValue } = this.props;
     return (
       <div className={styles.item}>
         <input
-          onChange={this.setTextfromInput}
+          onChange={(event) =>
+            changeInputValue(event.target.value, event.target.name)
+          }
           value={value}
           type="text"
           name={name}

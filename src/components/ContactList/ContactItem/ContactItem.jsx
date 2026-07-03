@@ -3,12 +3,12 @@ import styles from './ContactItem.module.css';
 
 export class ContactItem extends Component {
   render() {
-    const { contact, deleteContact, editContact } = this.props;
+    const { contact, deleteContact, selectContact } = this.props;
     return (
       <>
         <li
           className={styles.contactItem}
-          onDoubleClick={() => editContact(contact)}
+          onDoubleClick={() => selectContact(contact)}
         >
           <div style={{ display: 'flex', gap: '10px', marginLeft: '10px' }}>
             <p>{contact.firstName}</p>

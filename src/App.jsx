@@ -6,6 +6,7 @@ import { nanoid } from 'nanoid';
 import './App.css';
 
 const EMPTY_CONTACT = {
+  id: null,
   firstName: '',
   lastName: '',
   phone: '',
@@ -16,7 +17,6 @@ class App extends Component {
   state = {
     contacts: [],
     currentContact: { ...EMPTY_CONTACT },
-    mode: 'add',
   };
 
   componentDidMount() {
@@ -32,61 +32,55 @@ class App extends Component {
     }
   }
 
-  changeInputValue = (value, nameInput) => {
-    this.setState({
-      currentContact: { ...this.state.currentContact, [nameInput]: value },
+  addContact = (contact) => {
+    this.setState((state) => {
+      const newContacts = [...state.contacts, { ...contact, id: nanoid() }];
+      saveToLocalStorage(newContacts);
+      return {
+        contacts: newContacts,
+        currentContact: { ...EMPTY_CONTACT },
+      };
     });
   };
 
-  saveContactAdd = (currentContact, contacts) => {
-    const updatedContacts = [...contacts, { ...currentContact, id: nanoid() }];
-
-    this.setState({
-      contacts: updatedContacts,
-      currentContact: { ...EMPTY_CONTACT },
+  updateContact = (contact) => {
+    this.setState((state) => {
+      const updatedContacts = state.contacts.map((item) =>
+        item.id === contact.id ? contact : item,
+      );
+      saveToLocalStorage(updatedContacts);
+      return {
+        contacts: updatedContacts,
+        currentContact: { ...EMPTY_CONTACT },
+      };
     });
-
-    saveToLocalStorage(updatedContacts);
   };
 
-  saveContactEdit = (currentContact, contacts) => {
-    const updatedContacts = contacts.map((contact) =>
-      contact.id === currentContact.id ? currentContact : contact,
-    );
-    this.setState({
-      contacts: updatedContacts,
-      currentContact: { ...EMPTY_CONTACT },
-      mode: 'add',
-    });
-    saveToLocalStorage(updatedContacts);
-  };
-
-  saveContact = (event) => {
-    event.preventDefault();
-    const { contacts, currentContact, mode } = this.state;
-    if (mode === 'add') {
-      this.saveContactAdd(currentContact, contacts);
-    } else if (mode === 'edit') {
-      this.saveContactEdit(currentContact, contacts);
+  saveContact = (contact) => {
+    if (!contact.id) {
+      this.addContact(contact);
+    } else {
+      this.updateContact(contact);
     }
   };
 
-  editContact = (contact) => {
-    this.setState({
-      currentContact: { ...contact },
-      mode: 'edit',
+  deleteContact = (id) => {
+    this.setState((state) => {
+      const updatedContacts = state.contacts.filter(
+        (contact) => contact.id !== id,
+      );
+      saveToLocalStorage(updatedContacts);
+      return {
+        contacts: updatedContacts,
+        currentContact: { ...EMPTY_CONTACT },
+      };
     });
   };
 
-  deleteContact = (id) => {
-    const updatedContacts = this.state.contacts.filter(
-      (contact) => contact.id !== id,
-    );
-
+  selectContact = (contact) => {
     this.setState({
-      contacts: updatedContacts,
+      currentContact: { ...contact },
     });
-    saveToLocalStorage(updatedContacts);
   };
 
   render() {
@@ -99,10 +93,9 @@ class App extends Component {
           <ContactList
             contacts={this.state.contacts}
             deleteContact={this.deleteContact}
-            editContact={this.editContact}
+            selectContact={this.selectContact}
           />
           <ContactForm
-            mode={this.state.mode}
             currentContact={this.state.currentContact}
             changeInputValue={this.changeInputValue}
             saveContact={this.saveContact}
@@ -113,14 +106,7 @@ class App extends Component {
           className="new-contact-button"
           onClick={() => {
             this.setState({
-              currentContact: {
-                firstName: '',
-                lastName: '',
-                phone: '',
-                email: '',
-              },
-              inputMode: true,
-              mode: 'add',
+              currentContact: { ...EMPTY_CONTACT },
             });
           }}
         >
