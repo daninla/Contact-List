@@ -7,20 +7,18 @@ export class ContactForm extends Component {
     ...this.props.currentContact,
   };
 
-
   clickByDelete = () => {
     this.props.deleteContact(this.props.currentContact.id);
   };
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.currentContact !== prevState.prevContact) {
+  static getDerivedStateFromProps(props, state) {
+    if (props.currentContact !== state.prevContact) {
       return {
-        ...nextProps.currentContact,
-        prevContact: nextProps.currentContact,
+        ...props.currentContact,
+        prevContact: props.currentContact,
       };
     }
-
-    return null;
+    return {};
   }
 
   changeInputValue = (value, nameInput) => {
@@ -32,6 +30,14 @@ export class ContactForm extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.saveContact(this.state);
+    if (!this.state.id) {
+      this.setState({
+        firstName: '',
+        lastName: '',
+        phone: '',
+        email: '',
+      });
+    }
   };
 
   render() {
