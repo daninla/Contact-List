@@ -1,37 +1,33 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './ContactForm.module.css';
+import PropTypes from 'prop-types';
 import ContactInput from './ContactInput/ContactInput';
 
-export class ContactForm extends Component {
-  state = {
-    ...this.props.currentContact,
+function ContactForm({ currentContact, saveContact, deleteContact }) {
+  const [inputValues, setInputValues] = useState({
+    ...currentContact,
+  });
+
+  const clickByDelete = () => {
+    deleteContact(currentContact.id);
   };
 
-  clickByDelete = () => {
-    this.props.deleteContact(this.props.currentContact.id);
-  };
+  useEffect(() => {
+    setInputValues({ ...currentContact });
+  }, [currentContact]);
 
-  static getDerivedStateFromProps(props, state) {
-    if (props.currentContact !== state.prevContact) {
-      return {
-        ...props.currentContact,
-        prevContact: props.currentContact,
-      };
-    }
-    return {};
-  }
-
-  changeInputValue = (value, nameInput) => {
-    this.setState({
+  const changeInputValue = (value, nameInput) => {
+    setInputValues((prev) => ({
+      ...prev,
       [nameInput]: value,
-    });
+    }));
   };
 
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    this.props.saveContact(this.state);
-    if (!this.state.id) {
-      this.setState({
+    saveContact(inputValues);
+    if (!inputValues.id) {
+      setInputValues({
         firstName: '',
         lastName: '',
         phone: '',
@@ -39,68 +35,58 @@ export class ContactForm extends Component {
       });
     }
   };
+  const { firstName, lastName, phone, email } = inputValues;
 
-  render() {
-    const { mode, currentContact, saveContact, deleteContact } = this.props;
-    const { firstName, lastName, phone, email } = this.state;
-
-    return (
-      <>
-        <form className={styles.formField} onSubmit={this.handleSubmit}>
-          <div className={styles.itemContainer}>
-            <ContactInput
-              changeInputValue={this.changeInputValue}
-              value={firstName}
-              name="firstName"
-              id="firstName"
-              placeholder="First Name"
-            />
-            <ContactInput
-              changeInputValue={this.changeInputValue}
-              value={lastName}
-              name="lastName"
-              id="lastName"
-              placeholder="Last Name"
-            />
-            <ContactInput
-              changeInputValue={this.changeInputValue}
-              value={phone}
-              name="phone"
-              id="phone"
-              placeholder="Phone Number"
-            />
-            <ContactInput
-              changeInputValue={this.changeInputValue}
-              value={email}
-              name="email"
-              id="email"
-              placeholder="Email Address"
-            />
-          </div>
-          <div
-            style={{
-              width: '100%',
-              alignItems: 'center',
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-          >
-            <button className={styles.saveButton} type="submit">
-              Save
+  return (
+    <>
+      <form className={styles.formField} onSubmit={handleSubmit}>
+        <div className={styles.itemContainer}>
+          <ContactInput
+            changeInputValue={changeInputValue}
+            value={firstName}
+            name="firstName"
+            id="firstName"
+            placeholder="First Name"
+          />
+          <ContactInput
+            changeInputValue={changeInputValue}
+            value={lastName}
+            name="lastName"
+            id="lastName"
+            placeholder="Last Name"
+          />
+          <ContactInput
+            changeInputValue={changeInputValue}
+            value={phone}
+            name="phone"
+            id="phone"
+            placeholder="Phone Number"
+          />
+          <ContactInput
+            changeInputValue={changeInputValue}
+            value={email}
+            name="email"
+            id="email"
+            placeholder="Email Address"
+          />
+        </div>
+        <div className={styles.buttonContainer}>
+          <button className={styles.saveButton}>Save</button>
+          {!currentContact.id ? null : (
+            <button
+              className={styles.deleteButton}
+              onClick={clickByDelete}
+              type="submit"
+            >
+              Delete
             </button>
-            {!this.props.currentContact.id ? null : (
-              <button
-                className={styles.deleteButton}
-                onClick={this.clickByDelete}
-                type="submit"
-              >
-                Delete
-              </button>
-            )}
-          </div>
-        </form>
-      </>
-    );
-  }
+          )}
+        </div>
+      </form>
+    </>
+  );
 }
+ContactForm.PropTypes = {
+  saveContact: PropTypes.func,
+};
 export default ContactForm;

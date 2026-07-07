@@ -1,6 +1,6 @@
-import { Component } from 'react';
-import ContactList from './components/ContactList/ContactList';
-import ContactForm from './components/ContactForm/ContactForm';
+import React, { useState, useEffect } from 'react';
+import  ContactList  from './components/ContactList/ContactList';
+import  ContactForm from './components/ContactForm/ContactForm';
 import { saveToLocalStorage } from './localStorage';
 import { nanoid } from 'nanoid';
 import './App.css';
@@ -13,108 +13,87 @@ const EMPTY_CONTACT = {
   email: '',
 };
 
-class App extends Component {
-  state = {
-    contacts: [],
-    currentContact: { ...EMPTY_CONTACT },
-  };
+function App() {
+  const [contacts, setContacts] = useState([]);
+  const [currentContact, setCurrentContact] = useState({ ...EMPTY_CONTACT });
 
-  componentDidMount() {
+  useEffect(() => {
     const contactsLocal = JSON.parse(localStorage.getItem('contacts'));
     if (!contactsLocal) {
-      this.setState({
-        contacts: [],
-      });
+      setContacts([]);
     } else {
-      this.setState({
-        contacts: [...contactsLocal],
-      });
+      setContacts(contactsLocal);
     }
-  }
+  }, []);
 
-  addContact = (contact) => {
-    this.setState((state) => {
-      const newContacts = [...state.contacts, { ...contact, id: nanoid() }];
+  const addContact = (contact) => {
+    setContacts((prevContacts) => {
+      const newContacts = [...prevContacts, { ...contact, id: nanoid() }];
       saveToLocalStorage(newContacts);
-      return {
-        contacts: newContacts,
-        currentContact: { ...EMPTY_CONTACT },
-      };
+      return newContacts;
     });
   };
 
-  updateContact = (contact) => {
-    this.setState((state) => {
-      const updatedContacts = state.contacts.map((item) =>
+  const updateContact = (contact) => {
+    setContacts((prevContacts) => {
+      const updatedContacts = prevContacts.map((item) =>
         item.id === contact.id ? contact : item,
       );
       saveToLocalStorage(updatedContacts);
-      return {
-        contacts: updatedContacts,
-        currentContact: { ...EMPTY_CONTACT },
-      };
+      return updatedContacts;
     });
+    setCurrentContact({ ...EMPTY_CONTACT });
   };
 
-  saveContact = (contact) => {
+  const saveContact = (contact) => {
     if (!contact.id) {
-      this.addContact(contact);
+      addContact(contact);
     } else {
-      this.updateContact(contact);
+      updateContact(contact);
     }
   };
 
-  deleteContact = (id) => {
-    this.setState((state) => {
-      const updatedContacts = state.contacts.filter(
+  const deleteContact = (id) => {
+    setContacts((prevContacts) => {
+      const updatedContacts = prevContacts.filter(
         (contact) => contact.id !== id,
       );
       saveToLocalStorage(updatedContacts);
-      return {
-        contacts: updatedContacts,
-        currentContact: { ...EMPTY_CONTACT },
-      };
+      return updatedContacts;
     });
+    setCurrentContact({ ...EMPTY_CONTACT });
   };
 
-  selectContact = (contact) => {
-    this.setState({
-      currentContact: { ...contact },
-    });
+  const selectContact = (contact) => {
+    setCurrentContact({ ...contact });
   };
 
-  render() {
-    return (
-      <div className="app">
-        <header>
-          <h1>Contact List</h1>
-        </header>
-        <div className="app-main">
-          <ContactList
-            contacts={this.state.contacts}
-            deleteContact={this.deleteContact}
-            selectContact={this.selectContact}
-          />
-          <ContactForm
-            currentContact={this.state.currentContact}
-            changeInputValue={this.changeInputValue}
-            saveContact={this.saveContact}
-            deleteContact={this.deleteContact}
-          />
-        </div>
-        <button
-          className="new-contact-button"
-          onClick={() => {
-            this.setState({
-              currentContact: { ...EMPTY_CONTACT },
-            });
-          }}
-        >
-          New
-        </button>
+  return (
+    <div className="app">
+      <header>
+        <h1>Contact List</h1>
+      </header>
+      <div className="app-main">
+        <ContactList
+          contacts={contacts}
+          deleteContact={deleteContact}
+          selectContact={selectContact}
+        />
+        <ContactForm
+          currentContact={currentContact}
+          saveContact={saveContact}
+          deleteContact={deleteContact}
+        />
       </div>
-    );
-  }
+      <button
+        className="new-contact-button"
+        onClick={() => {
+          setCurrentContact({ ...EMPTY_CONTACT });
+        }}
+      >
+        New
+      </button>
+    </div>
+  );
 }
-
 export default App;
