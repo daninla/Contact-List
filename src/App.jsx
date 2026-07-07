@@ -5,7 +5,7 @@ import { saveToLocalStorage } from './localStorage';
 import { nanoid } from 'nanoid';
 import './App.css';
 
-const EMPTY_CONTACT = {
+export const EMPTY_CONTACT = {
   id: null,
   firstName: '',
   lastName: '',
@@ -68,6 +68,10 @@ function App() {
     setCurrentContact({ ...contact });
   };
 
+  const clearCurrentContact = () => {
+    setCurrentContact({ ...EMPTY_CONTACT });
+  };
+
   return (
     <div className="app">
       <header>
@@ -83,16 +87,9 @@ function App() {
           currentContact={currentContact}
           saveContact={saveContact}
           deleteContact={deleteContact}
+          clearCurrentContact={clearCurrentContact}
         />
       </div>
-      <button
-        className="new-contact-button"
-        onClick={() => {
-          setCurrentContact({ ...EMPTY_CONTACT });
-        }}
-      >
-        New
-      </button>
     </div>
   );
 }

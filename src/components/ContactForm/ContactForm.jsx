@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import styles from './ContactForm.module.css';
 import PropTypes from 'prop-types';
+import { EMPTY_CONTACT } from '../../App';
 import ContactInput from './ContactInput/ContactInput';
 
-function ContactForm({ currentContact, saveContact, deleteContact }) {
+function ContactForm({
+  currentContact,
+  saveContact,
+  deleteContact,
+  clearCurrentContact,
+}) {
   const [inputValues, setInputValues] = useState({
     ...currentContact,
   });
@@ -28,10 +34,7 @@ function ContactForm({ currentContact, saveContact, deleteContact }) {
     saveContact(inputValues);
     if (!inputValues.id) {
       setInputValues({
-        firstName: '',
-        lastName: '',
-        phone: '',
-        email: '',
+        ...EMPTY_CONTACT,
       });
     }
   };
@@ -83,6 +86,14 @@ function ContactForm({ currentContact, saveContact, deleteContact }) {
           )}
         </div>
       </form>
+      <button
+        className="new-contact-button"
+        onClick={() => {
+          clearCurrentContact();
+        }}
+      >
+        New
+      </button>
     </>
   );
 }
