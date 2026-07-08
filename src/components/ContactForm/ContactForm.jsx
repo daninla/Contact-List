@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styles from './ContactForm.module.css';
-import PropTypes from 'prop-types';
 import { EMPTY_CONTACT } from '../../App';
 import ContactInput from './ContactInput/ContactInput';
 
@@ -97,7 +96,4 @@ function ContactForm({
     </>
   );
 }
-ContactForm.PropTypes = {
-  saveContact: PropTypes.func,
-};
 export default ContactForm;

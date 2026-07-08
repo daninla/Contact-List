@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ContactItem from './ContactItem/ContactItem';
 import { nanoid } from 'nanoid';
-import PropTypes from 'prop-types';
 import styles from './ContactList.module.css';
 
 function ContactList({ contacts, deleteContact, selectContact }) {
@@ -23,10 +22,4 @@ function ContactList({ contacts, deleteContact, selectContact }) {
     </>
   );
 }
-ContactList.propTypes = {
-  contacts: PropTypes.array,
-};  
-ContactList.defaultProps = {
-  contacts: [],
-};
 export default ContactList;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import  ContactList  from './components/ContactList/ContactList';
-import  ContactForm from './components/ContactForm/ContactForm';
+import ContactList from './components/ContactList/ContactList';
+import ContactForm from './components/ContactForm/ContactForm';
+import api from './api/contact-service';
 import { saveToLocalStorage } from './localStorage';
 import { nanoid } from 'nanoid';
 import './App.css';
@@ -18,12 +19,13 @@ function App() {
   const [currentContact, setCurrentContact] = useState({ ...EMPTY_CONTACT });
 
   useEffect(() => {
-    const contactsLocal = JSON.parse(localStorage.getItem('contacts'));
-    if (!contactsLocal) {
-      setContacts([]);
-    } else {
-      setContacts(contactsLocal);
-    }
+    api.get('/').then(({data}) => {
+      if (!data) {
+        setContacts([]);
+      } else {
+        setContacts(data);
+      }
+    });
   }, []);
 
   const addContact = (contact) => {
