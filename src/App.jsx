@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import ContactList from './components/ContactList/ContactList';
 import ContactForm from './components/ContactForm/ContactForm';
 import api from './api/contact-service';
-import { saveToLocalStorage } from './localStorage';
-import { nanoid } from 'nanoid';
 import './App.css';
 
 export const EMPTY_CONTACT = {
@@ -19,7 +17,7 @@ function App() {
   const [currentContact, setCurrentContact] = useState({ ...EMPTY_CONTACT });
 
   useEffect(() => {
-    api.get('/').then(({data}) => {
+    api.get('/').then(({ data }) => {
       if (!data) {
         setContacts([]);
       } else {
@@ -29,22 +27,18 @@ function App() {
   }, []);
 
   const addContact = (contact) => {
-    setContacts((prevContacts) => {
-      const newContacts = [...prevContacts, { ...contact, id: nanoid() }];
-      saveToLocalStorage(newContacts);
-      return newContacts;
+    api.post('/', contact).then(({ data }) => {
+      setContacts((prevContacts) => {
+        return [...prevContacts, data];
+      });
     });
   };
 
   const updateContact = (contact) => {
-    setContacts((prevContacts) => {
-      const updatedContacts = prevContacts.map((item) =>
-        item.id === contact.id ? contact : item,
-      );
-      saveToLocalStorage(updatedContacts);
-      return updatedContacts;
+    api.put(`/${contact.id}`, contact).then(({ data }) => {
+      setContacts(contacts.map((c) => (c.id === data.id ? data : c)));
+      clearCurrentContact();
     });
-    setCurrentContact({ ...EMPTY_CONTACT });
   };
 
   const saveContact = (contact) => {
@@ -56,14 +50,10 @@ function App() {
   };
 
   const deleteContact = (id) => {
-    setContacts((prevContacts) => {
-      const updatedContacts = prevContacts.filter(
-        (contact) => contact.id !== id,
-      );
-      saveToLocalStorage(updatedContacts);
-      return updatedContacts;
+    api.delete(`/${id}`).then(({ data }) => {
+      setContacts(contacts.filter((item) => item.id !== data.id));
+      clearCurrentContact();
     });
-    setCurrentContact({ ...EMPTY_CONTACT });
   };
 
   const selectContact = (contact) => {
