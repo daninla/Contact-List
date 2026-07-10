@@ -1,8 +1,6 @@
-import React, { Component } from 'react';
 import styles from './ContactItem.module.css';
 
 function ContactItem({ contact, deleteContact, selectContact }) {
-  const { firstName, lastName } = contact;
   return (
     <>
       <li

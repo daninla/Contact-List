@@ -1,4 +1,3 @@
-import React, { Component } from 'react';
 import styles from './ContactInput.module.css';
 
 const ContactInput = ({ value, name, id, placeholder, changeInputValue }) => {
