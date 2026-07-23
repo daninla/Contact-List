@@ -1,106 +1,115 @@
-import React, { Component } from 'react';
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import styles from './ContactForm.module.css';
+import api from '../../api/contact-service';
+import { EMPTY_CONTACT } from '../../model/contact';
+import {
+  addContactSuccess,
+  updateContactSuccess,
+  deleteContactSuccess,
+  clearCurrentContact,
+} from '../../store/actions/contactActions';
 import ContactInput from './ContactInput/ContactInput';
 
-export class ContactForm extends Component {
-  state = {
-    ...this.props.currentContact,
+function ContactForm() {
+  const currentContact = useSelector((state) => state.contacts.currentContact);
+  const dispatch = useDispatch();
+
+  const [inputValues, setInputValues] = useState({ ...currentContact });
+
+  useEffect(() => {
+    setInputValues({ ...currentContact });
+  }, [currentContact]);
+
+  const changeInputValue = (value, nameInput) => {
+    setInputValues((prev) => ({ ...prev, [nameInput]: value }));
   };
 
-  clickByDelete = () => {
-    this.props.deleteContact(this.props.currentContact.id);
-  };
-
-  static getDerivedStateFromProps(props, state) {
-    if (props.currentContact !== state.prevContact) {
-      return {
-        ...props.currentContact,
-        prevContact: props.currentContact,
-      };
-    }
-    return {};
-  }
-
-  changeInputValue = (value, nameInput) => {
-    this.setState({
-      [nameInput]: value,
+  const addContact = (contact) => {
+    api.post('/', contact).then(({ data }) => {
+      dispatch(addContactSuccess(data));
     });
   };
 
-  handleSubmit = (e) => {
+  const updateContact = (contact) => {
+    api.put(`/${contact.id}`, contact).then(({ data }) => {
+      dispatch(updateContactSuccess(data));
+    });
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    this.props.saveContact(this.state);
-    if (!this.state.id) {
-      this.setState({
-        firstName: '',
-        lastName: '',
-        phone: '',
-        email: '',
-      });
+    if (!currentContact.id) {
+      addContact(inputValues);
+      setInputValues({ ...EMPTY_CONTACT });
+    } else {
+      updateContact(inputValues);
     }
   };
 
-  render() {
-    const { mode, currentContact, saveContact, deleteContact } = this.props;
-    const { firstName, lastName, phone, email } = this.state;
+  const clickByDelete = (e) => {
+    e.preventDefault();
+    api.delete(`/${currentContact.id}`).then(({ data }) => {
+      dispatch(deleteContactSuccess(data.id));
+    });
+  };
 
-    return (
-      <>
-        <form className={styles.formField} onSubmit={this.handleSubmit}>
-          <div className={styles.itemContainer}>
-            <ContactInput
-              changeInputValue={this.changeInputValue}
-              value={firstName}
-              name="firstName"
-              id="firstName"
-              placeholder="First Name"
-            />
-            <ContactInput
-              changeInputValue={this.changeInputValue}
-              value={lastName}
-              name="lastName"
-              id="lastName"
-              placeholder="Last Name"
-            />
-            <ContactInput
-              changeInputValue={this.changeInputValue}
-              value={phone}
-              name="phone"
-              id="phone"
-              placeholder="Phone Number"
-            />
-            <ContactInput
-              changeInputValue={this.changeInputValue}
-              value={email}
-              name="email"
-              id="email"
-              placeholder="Email Address"
-            />
-          </div>
-          <div
-            style={{
-              width: '100%',
-              alignItems: 'center',
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-          >
-            <button className={styles.saveButton} type="submit">
-              Save
+  const { firstName, lastName, phone, email } = inputValues;
+
+  return (
+    <>
+      <form className={styles.formField} onSubmit={handleSubmit}>
+        <div className={styles.itemContainer}>
+          <ContactInput
+            changeInputValue={changeInputValue}
+            value={firstName}
+            name="firstName"
+            id="firstName"
+            placeholder="First Name"
+          />
+          <ContactInput
+            changeInputValue={changeInputValue}
+            value={lastName}
+            name="lastName"
+            id="lastName"
+            placeholder="Last Name"
+          />
+          <ContactInput
+            changeInputValue={changeInputValue}
+            value={phone}
+            name="phone"
+            id="phone"
+            placeholder="Phone Number"
+          />
+          <ContactInput
+            changeInputValue={changeInputValue}
+            value={email}
+            name="email"
+            id="email"
+            placeholder="Email Address"
+          />
+        </div>
+        <div className={styles.buttonContainer}>
+          <button className={styles.saveButton}>Save</button>
+          {!currentContact.id ? null : (
+            <button
+              className={styles.deleteButton}
+              onClick={clickByDelete}
+              type="button"
+            >
+              Delete
             </button>
-            {!this.props.currentContact.id ? null : (
-              <button
-                className={styles.deleteButton}
-                onClick={this.clickByDelete}
-                type="submit"
-              >
-                Delete
-              </button>
-            )}
-          </div>
-        </form>
-      </>
-    );
-  }
+          )}
+        </div>
+      </form>
+      <button
+        className="new-contact-button"
+        onClick={() => dispatch(clearCurrentContact())}
+      >
+        New
+      </button>
+    </>
+  );
 }
+
 export default ContactForm;

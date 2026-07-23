@@ -39,12 +39,18 @@
   margin-left: 50px;
 }
 
+.buttonContainer {
+  width: 100%;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
 @media (max-width: 950px) {
   .itemContainer {
     width: 90%;
   }
 }
-
 
 @media (max-width: 600px) {
   .itemContainer {
