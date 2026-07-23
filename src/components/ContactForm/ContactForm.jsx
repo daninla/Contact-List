@@ -1,42 +1,59 @@
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import styles from './ContactForm.module.css';
-import { EMPTY_CONTACT } from '../../App';
+import api from '../../api/contact-service';
+import { EMPTY_CONTACT } from '../../model/contact';
+import {
+  addContactSuccess,
+  updateContactSuccess,
+  deleteContactSuccess,
+  clearCurrentContact,
+} from '../../store/actions/contactActions';
 import ContactInput from './ContactInput/ContactInput';
 
-function ContactForm({
-  currentContact,
-  saveContact,
-  deleteContact,
-  clearCurrentContact,
-}) {
-  const [inputValues, setInputValues] = useState({
-    ...currentContact,
-  });
+function ContactForm() {
+  const currentContact = useSelector((state) => state.contacts.currentContact);
+  const dispatch = useDispatch();
 
-  const clickByDelete = () => {
-    deleteContact(currentContact.id);
-  };
+  const [inputValues, setInputValues] = useState({ ...currentContact });
 
   useEffect(() => {
     setInputValues({ ...currentContact });
   }, [currentContact]);
 
   const changeInputValue = (value, nameInput) => {
-    setInputValues((prev) => ({
-      ...prev,
-      [nameInput]: value,
-    }));
+    setInputValues((prev) => ({ ...prev, [nameInput]: value }));
+  };
+
+  const addContact = (contact) => {
+    api.post('/', contact).then(({ data }) => {
+      dispatch(addContactSuccess(data));
+    });
+  };
+
+  const updateContact = (contact) => {
+    api.put(`/${contact.id}`, contact).then(({ data }) => {
+      dispatch(updateContactSuccess(data));
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    saveContact(inputValues);
-    if (!inputValues.id) {
-      setInputValues({
-        ...EMPTY_CONTACT,
-      });
+    if (!currentContact.id) {
+      addContact(inputValues);
+      setInputValues({ ...EMPTY_CONTACT });
+    } else {
+      updateContact(inputValues);
     }
   };
+
+  const clickByDelete = (e) => {
+    e.preventDefault();
+    api.delete(`/${currentContact.id}`).then(({ data }) => {
+      dispatch(deleteContactSuccess(data.id));
+    });
+  };
+
   const { firstName, lastName, phone, email } = inputValues;
 
   return (
@@ -78,7 +95,7 @@ function ContactForm({
             <button
               className={styles.deleteButton}
               onClick={clickByDelete}
-              type="submit"
+              type="button"
             >
               Delete
             </button>
@@ -87,13 +104,12 @@ function ContactForm({
       </form>
       <button
         className="new-contact-button"
-        onClick={() => {
-          clearCurrentContact();
-        }}
+        onClick={() => dispatch(clearCurrentContact())}
       >
         New
       </button>
     </>
   );
 }
+
 export default ContactForm;

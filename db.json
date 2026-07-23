@@ -1,12 +1,4 @@
 {
-  "contacts": [
-    {
-      "id": "zy2anJjFq50",
-      "firstName": "tfgj",
-      "lastName": "",
-      "phone": "",
-      "email": ""
-    }
-  ],
+  "contacts": [],
   "$schema": "./node_modules/json-server/schema.json"
 }
