@@ -4,8 +4,8 @@ import { ClipLoader } from 'react-spinners';
 
 import api from '../../api/contact-service';
 import {
-  deleteContactSuccess,
-  fetchContactsSuccess,
+  deleteContactAction,
+  fetchContactsAction,
   selectContact,
 } from '../../store/actions/contactActions';
 
@@ -27,15 +27,13 @@ function ContactList() {
 
     Promise.all([fetchPromise, delayPromise])
       .then(([{ data }]) => {
-        dispatch(fetchContactsSuccess(data || []));
+        dispatch(fetchContactsAction(data));
       })
       .finally(() => setIsLoading(false));
   }, [dispatch]);
 
   const deleteContact = (id) => {
-    api.delete(`/${id}`).then(({ data }) => {
-      dispatch(deleteContactSuccess(data.id));
-    });
+      dispatch(deleteContactAction(id));
   };
 
   const handleSelectContact = (contact) => {

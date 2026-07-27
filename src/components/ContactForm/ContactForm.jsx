@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import api from '../../api/contact-service';
 import { EMPTY_CONTACT } from '../../model/contact';
 import {
-  addContactSuccess,
+  addContactAction,
   clearCurrentContact,
-  deleteContactSuccess,
-  updateContactSuccess,
+  deleteContactAction,
+  updateContactAction,
 } from '../../store/actions/contactActions';
 
 import ContactInput from './ContactInput/ContactInput';
@@ -30,15 +29,11 @@ function ContactForm() {
   };
 
   const addContact = (contact) => {
-    api.post('/', contact).then(({ data }) => {
-      dispatch(addContactSuccess(data));
-    });
+    dispatch(addContactAction(contact));
   };
 
   const updateContact = (contact) => {
-    api.put(`/${contact.id}`, contact).then(({ data }) => {
-      dispatch(updateContactSuccess(data));
-    });
+    dispatch(updateContactAction(contact));
   };
 
   const handleSubmit = (e) => {
@@ -53,9 +48,7 @@ function ContactForm() {
 
   const clickByDelete = (e) => {
     e.preventDefault();
-    api.delete(`/${currentContact.id}`).then(({ data }) => {
-      dispatch(deleteContactSuccess(data.id));
-    });
+    dispatch(deleteContactAction(currentContact.id));
   };
 
   const { firstName, lastName, phone, email } = inputValues;
