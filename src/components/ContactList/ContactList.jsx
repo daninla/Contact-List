@@ -5,7 +5,7 @@ import { ClipLoader } from 'react-spinners';
 import api from '../../api/contact-service';
 import {
   deleteContactAction,
-  fetchContactsAction,
+  getContactsAction,
   selectContact,
 } from '../../store/actions/contactActions';
 
@@ -27,13 +27,13 @@ function ContactList() {
 
     Promise.all([fetchPromise, delayPromise])
       .then(([{ data }]) => {
-        dispatch(fetchContactsAction(data));
+        dispatch(getContactsAction(data));
       })
       .finally(() => setIsLoading(false));
   }, [dispatch]);
 
   const deleteContact = (id) => {
-      dispatch(deleteContactAction(id));
+    dispatch(deleteContactAction(id));
   };
 
   const handleSelectContact = (contact) => {

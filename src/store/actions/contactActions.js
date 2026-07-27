@@ -1,20 +1,20 @@
 import types from './actionTypes';
 
 // ---- Fetch contacts ----
-export const fetchContactsAction = () => ({
+export const getContactsAction = () => ({
   type: types.GET_CONTACTS_ACTION,
 });
 
-export const fetchContactsRequest = () => ({
+export const getContactsRequest = () => ({
   type: types.GET_CONTACTS_REQUEST,
 });
 
-export const fetchContactsSuccess = (contacts) => ({
+export const getContactsSuccess = (contacts) => ({
   type: types.GET_CONTACTS_SUCCESS,
   payload: contacts,
 });
 
-export const fetchContactsError = (error) => ({
+export const getContactsError = (error) => ({
   type: types.GET_CONTACTS_ERROR,
   payload: error,
 });

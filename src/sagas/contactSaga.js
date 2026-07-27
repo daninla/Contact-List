@@ -19,7 +19,7 @@ import {
   updateContactError,
   updateContactRequest,
   updateContactSuccess,
-} from '../store/actions/actions';
+} from '../store/actions/contactActions';
 
 // ---- Get contacts ----
 export function* getContactsSaga() {
