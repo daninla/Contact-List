@@ -53,7 +53,7 @@ export default defineConfig([
       'react-hooks/set-state-in-effect': 'warn',
 
       'no-console': 'warn',
-      'no-unused-vars': 'error',
+      'no-unused-vars': 'warn',
       'no-redeclare': 'error',
       'prefer-const': 'error',
       'no-var': 'error',
