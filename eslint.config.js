@@ -49,8 +49,8 @@ export default defineConfig([
       'react/react-in-jsx-scope': 'off',
       'react/jsx-uses-react': 'off',
       'react/prop-types': 'off',
-      'react-refresh/only-export-components': 'off',
-      'react-hooks/set-state-in-effect': 'off',
+      'react-refresh/only-export-components': 'warn',
+      'react-hooks/set-state-in-effect': 'warn',
 
       'no-console': 'warn',
       'no-unused-vars': 'error',

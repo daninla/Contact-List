@@ -1,15 +1,18 @@
-import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import styles from './ContactForm.module.css';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import api from '../../api/contact-service';
 import { EMPTY_CONTACT } from '../../model/contact';
 import {
   addContactSuccess,
-  updateContactSuccess,
-  deleteContactSuccess,
   clearCurrentContact,
+  deleteContactSuccess,
+  updateContactSuccess,
 } from '../../store/actions/contactActions';
+
 import ContactInput from './ContactInput/ContactInput';
+
+import styles from './ContactForm.module.css';
 
 function ContactForm() {
   const currentContact = useSelector((state) => state.contacts.currentContact);
@@ -18,6 +21,7 @@ function ContactForm() {
   const [inputValues, setInputValues] = useState({ ...currentContact });
 
   useEffect(() => {
+    //eslint-disable-next-line react-hooks/set-state-in-effect
     setInputValues({ ...currentContact });
   }, [currentContact]);
 

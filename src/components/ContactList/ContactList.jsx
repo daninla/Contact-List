@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import ContactItem from './ContactItem/ContactItem';
+import { useDispatch, useSelector } from 'react-redux';
+import { ClipLoader } from 'react-spinners';
+
 import api from '../../api/contact-service';
 import {
-  fetchContactsSuccess,
   deleteContactSuccess,
+  fetchContactsSuccess,
   selectContact,
 } from '../../store/actions/contactActions';
+
+import ContactItem from './ContactItem/ContactItem';
+
 import styles from './ContactList.module.css';
-import { ClipLoader } from 'react-spinners';
 
 function ContactList() {
   const contacts = useSelector((state) => state.contacts.contacts);
@@ -16,6 +19,7 @@ function ContactList() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    //eslint-disable-next-line react-hooks/set-state-in-effect
     setIsLoading(true);
 
     const fetchPromise = api.get('/');
@@ -43,6 +47,8 @@ function ContactList() {
       <h2>Contact List</h2>
       {isLoading ? (
         <ClipLoader />
+      ) : contacts.length == 0 ? (
+        'Пусто'
       ) : (
         <ul className={styles.contactList}>
           {contacts.map((contact) => (
