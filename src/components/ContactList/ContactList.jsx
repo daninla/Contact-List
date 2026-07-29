@@ -2,19 +2,18 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ClipLoader } from 'react-spinners';
 
-import api from '../../api/contact-service';
 import {
-  deleteContactSuccess,
-  fetchContactsSuccess,
+  fetchContacts,
+  removeContact,
   selectContact,
-} from '../../store/actions/contactActions';
+} from '../../store/slices/contactsSlice';
 
 import ContactItem from './ContactItem/ContactItem';
 
 import styles from './ContactList.module.css';
 
 function ContactList() {
-  const contacts = useSelector((state) => state.contacts.contacts);
+  const contacts = useSelector((state) => state.contactsList.contacts);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -22,20 +21,16 @@ function ContactList() {
     //eslint-disable-next-line react-hooks/set-state-in-effect
     setIsLoading(true);
 
-    const fetchPromise = api.get('/');
-    const delayPromise = new Promise((resolve) => setTimeout(resolve, 500));
+    const timer = setTimeout(async () => {
+      await dispatch(fetchContacts());
+      setIsLoading(false);
+    }, 1000);
 
-    Promise.all([fetchPromise, delayPromise])
-      .then(([{ data }]) => {
-        dispatch(fetchContactsSuccess(data || []));
-      })
-      .finally(() => setIsLoading(false));
+    return () => clearTimeout(timer);
   }, [dispatch]);
 
   const deleteContact = (id) => {
-    api.delete(`/${id}`).then(({ data }) => {
-      dispatch(deleteContactSuccess(data.id));
-    });
+    dispatch(removeContact(id));
   };
 
   const handleSelectContact = (contact) => {

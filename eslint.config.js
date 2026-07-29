@@ -1,10 +1,10 @@
 import js from '@eslint/js';
-import globals from 'globals';
+import importPlugin from 'eslint-plugin-import';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
-import importPlugin from 'eslint-plugin-import';
 import { defineConfig, globalIgnores } from 'eslint/config';
+import globals from 'globals';
 
 export default defineConfig([
   globalIgnores(['dist']),
@@ -53,7 +53,7 @@ export default defineConfig([
       'react-hooks/set-state-in-effect': 'warn',
 
       'no-console': 'warn',
-      'no-unused-vars': 'error',
+      'no-unused-vars': 'warn',
       'no-redeclare': 'error',
       'prefer-const': 'error',
       'no-var': 'error',

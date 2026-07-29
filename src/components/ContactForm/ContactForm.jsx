@@ -1,21 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import api from '../../api/contact-service';
 import { EMPTY_CONTACT } from '../../model/contact';
 import {
-  addContactSuccess,
+  addContact,
   clearCurrentContact,
-  deleteContactSuccess,
-  updateContactSuccess,
-} from '../../store/actions/contactActions';
+  editContact,
+  removeContact,
+} from '../../store/slices/contactsSlice';
 
 import ContactInput from './ContactInput/ContactInput';
 
 import styles from './ContactForm.module.css';
 
 function ContactForm() {
-  const currentContact = useSelector((state) => state.contacts.currentContact);
+  const currentContact = useSelector((state) => state.contactsList.currentContact);
   const dispatch = useDispatch();
 
   const [inputValues, setInputValues] = useState({ ...currentContact });
@@ -29,33 +28,19 @@ function ContactForm() {
     setInputValues((prev) => ({ ...prev, [nameInput]: value }));
   };
 
-  const addContact = (contact) => {
-    api.post('/', contact).then(({ data }) => {
-      dispatch(addContactSuccess(data));
-    });
-  };
-
-  const updateContact = (contact) => {
-    api.put(`/${contact.id}`, contact).then(({ data }) => {
-      dispatch(updateContactSuccess(data));
-    });
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!currentContact.id) {
-      addContact(inputValues);
+      dispatch(addContact(inputValues));
       setInputValues({ ...EMPTY_CONTACT });
     } else {
-      updateContact(inputValues);
+      dispatch(editContact(inputValues));
     }
   };
 
   const clickByDelete = (e) => {
     e.preventDefault();
-    api.delete(`/${currentContact.id}`).then(({ data }) => {
-      dispatch(deleteContactSuccess(data.id));
-    });
+    dispatch(removeContact(currentContact.id));
   };
 
   const { firstName, lastName, phone, email } = inputValues;
