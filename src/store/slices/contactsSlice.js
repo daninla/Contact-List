@@ -7,6 +7,7 @@ import { EMPTY_CONTACT } from '../../model/contact';
 const initialState = {
   contacts: [],
   currentContact: { ...EMPTY_CONTACT },
+  successEditCont: false,
   isLoading: false,
   error: null,
 };
@@ -80,10 +81,12 @@ const contactsSlice = createSlice({
   reducers: {
     selectContact(state, { payload }) {
       state.currentContact = payload;
+      state.successEditCont = false;
     },
 
     clearCurrentContact(state) {
       state.currentContact = resetCurrentContact();
+      state.successEditCont = false;
     },
   },
 
@@ -91,13 +94,15 @@ const contactsSlice = createSlice({
     builder
       .addCase(fetchContacts.pending, setPending)
       .addCase(addContact.pending, setPending)
-      .addCase(editContact.pending, setPending)
       .addCase(removeContact.pending, setPending)
 
       .addCase(fetchContacts.rejected, setRejected)
       .addCase(addContact.rejected, setRejected)
       .addCase(editContact.rejected, setRejected)
       .addCase(removeContact.rejected, setRejected)
+      .addCase(editContact.pending, (state) => {
+        state.successEditCont = false;
+      })
 
       .addCase(fetchContacts.fulfilled, (state, action) => {
         state.contacts = action.payload;
@@ -113,8 +118,7 @@ const contactsSlice = createSlice({
         state.contacts = state.contacts.map((contact) =>
           contact.id === action.payload.id ? action.payload : contact,
         );
-
-        state.currentContact = resetCurrentContact();
+        state.successEditCont = true;
         state.isLoading = false;
       })
 
@@ -129,6 +133,7 @@ const contactsSlice = createSlice({
   },
 });
 
-export const { selectContact, clearCurrentContact } = contactsSlice.actions;
+export const { selectContact, clearCurrentContact, hideElement } =
+  contactsSlice.actions;
 
 export default contactsSlice.reducer;

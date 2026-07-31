@@ -1,20 +1,26 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { EMPTY_CONTACT } from '../../model/contact';
 import {
   addContact,
   clearCurrentContact,
   editContact,
   removeContact,
+  // successEditContact,
 } from '../../store/slices/contactsSlice';
 
 import ContactInput from './ContactInput/ContactInput';
+import SuccessMessage from './SuccessMessage/SuccessMessage';
 
 import styles from './ContactForm.module.css';
 
 function ContactForm() {
-  const currentContact = useSelector((state) => state.contactsList.currentContact);
+  const currentContact = useSelector(
+    (state) => state.contactsList.currentContact,
+  );
+  const showMessage = useSelector(
+    (state) => state.contactsList.successEditCont,
+  );
   const dispatch = useDispatch();
 
   const [inputValues, setInputValues] = useState({ ...currentContact });
@@ -32,10 +38,12 @@ function ContactForm() {
     e.preventDefault();
     if (!currentContact.id) {
       dispatch(addContact(inputValues));
-      setInputValues({ ...EMPTY_CONTACT });
-    } else {
-      dispatch(editContact(inputValues));
+      return;
     }
+    if (JSON.stringify(currentContact) === JSON.stringify(inputValues)) {
+      return;
+    }
+    dispatch(editContact(inputValues));
   };
 
   const clickByDelete = (e) => {
@@ -77,6 +85,7 @@ function ContactForm() {
             id="email"
             placeholder="Email Address"
           />
+          {showMessage ? <SuccessMessage /> : null}
         </div>
         <div className={styles.buttonContainer}>
           <button className={styles.saveButton}>Save</button>
