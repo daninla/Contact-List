@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { ErrorMessage, Form, Formik } from 'formik';
+import * as Yup from 'yup';
 
 import {
   addContact,
   clearCurrentContact,
   editContact,
   removeContact,
-  // successEditContact,
 } from '../../store/slices/contactsSlice';
 
 import ContactInput from './ContactInput/ContactInput';
@@ -14,99 +14,107 @@ import SuccessMessage from './SuccessMessage/SuccessMessage';
 
 import styles from './ContactForm.module.css';
 
+const validationSchema = Yup.object({
+  firstName: Yup.string().trim().required('First name is required'),
+  lastName: Yup.string().trim().required('Last name is required'),
+  phone: Yup.string().trim().required('Phone is required'),
+  email: Yup.string().email('Invalid email'),
+});
+
 function ContactForm() {
+  const dispatch = useDispatch();
+
   const currentContact = useSelector(
     (state) => state.contactsList.currentContact,
   );
+
   const showMessage = useSelector(
     (state) => state.contactsList.successEditCont,
   );
-  const dispatch = useDispatch();
 
-  const [inputValues, setInputValues] = useState({ ...currentContact });
-
-  useEffect(() => {
-    //eslint-disable-next-line react-hooks/set-state-in-effect
-    setInputValues({ ...currentContact });
-  }, [currentContact]);
-
-  const changeInputValue = (value, nameInput) => {
-    setInputValues((prev) => ({ ...prev, [nameInput]: value }));
+  const initialValues = {
+    firstName: currentContact.firstName || '',
+    lastName: currentContact.lastName || '',
+    phone: currentContact.phone || '',
+    email: currentContact.email || '',
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (values) => {
+    const contact = {
+      ...values,
+      id: currentContact.id,
+    };
     if (!currentContact.id) {
-      dispatch(addContact(inputValues));
+      dispatch(addContact(contact));
       return;
     }
-    if (JSON.stringify(currentContact) === JSON.stringify(inputValues)) {
+    if (JSON.stringify(contact) === JSON.stringify(currentContact)) {
       return;
     }
-    dispatch(editContact(inputValues));
+    dispatch(editContact(contact));
   };
-
-  const clickByDelete = (e) => {
-    e.preventDefault();
-    dispatch(removeContact(currentContact.id));
-  };
-
-  const { firstName, lastName, phone, email } = inputValues;
 
   return (
-    <>
-      <form className={styles.formField} onSubmit={handleSubmit}>
-        <div className={styles.itemContainer}>
-          <ContactInput
-            changeInputValue={changeInputValue}
-            value={firstName}
-            name="firstName"
-            id="firstName"
-            placeholder="First Name"
-          />
-          <ContactInput
-            changeInputValue={changeInputValue}
-            value={lastName}
-            name="lastName"
-            id="lastName"
-            placeholder="Last Name"
-          />
-          <ContactInput
-            changeInputValue={changeInputValue}
-            value={phone}
-            name="phone"
-            id="phone"
-            placeholder="Phone Number"
-          />
-          <ContactInput
-            changeInputValue={changeInputValue}
-            value={email}
-            name="email"
-            id="email"
-            placeholder="Email Address"
-          />
-          {showMessage ? <SuccessMessage /> : null}
-        </div>
-        <div className={styles.buttonContainer}>
-          <button className={styles.saveButton}>Save</button>
-          {!currentContact.id ? null : (
-            <button
-              className={styles.deleteButton}
-              onClick={clickByDelete}
-              type="button"
-            >
-              Delete
-            </button>
-          )}
-        </div>
-      </form>
-      <button
-        className="new-contact-button"
-        onClick={() => dispatch(clearCurrentContact())}
-      >
-        New
-      </button>
-    </>
+    <Formik
+      initialValues={initialValues}
+      enableReinitialize
+      validationSchema={validationSchema}
+      onSubmit={handleSubmit}
+    >
+      {() => (
+        <>
+          <Form className={styles.formField}>
+            <div className={styles.itemContainer}>
+              <div className={styles.inputContainer}>
+                <ContactInput name="firstName" placeholder="First Name" />
+                <ErrorMessage name="firstName" component="div" />
+              </div>
+
+              <div className={styles.inputContainer}>
+                <ContactInput name="lastName" placeholder="Last Name" />
+                <ErrorMessage name="lastName" component="div" />
+              </div>
+
+              <div className={styles.inputContainer}>
+                <ContactInput name="phone" placeholder="Phone Number" />
+                <ErrorMessage name="phone" component="div" />
+              </div>
+
+              <div className={styles.inputContainer}>
+                <ContactInput name="email" placeholder="Email Address" />
+                <ErrorMessage name="email" component="div" />
+              </div>
+
+              {showMessage && <SuccessMessage />}
+            </div>
+
+            <div className={styles.buttonContainer}>
+              <button type="submit" className={styles.saveButton}>
+                Save
+              </button>
+
+              {currentContact.id && (
+                <button
+                  type="button"
+                  className={styles.deleteButton}
+                  onClick={() => dispatch(removeContact(currentContact.id))}
+                >
+                  Delete
+                </button>
+              )}
+            </div>
+          </Form>
+
+          <button
+            className="new-contact-button"
+            onClick={() => dispatch(clearCurrentContact())}
+            type="button"
+          >
+            New
+          </button>
+        </>
+      )}
+    </Formik>
   );
 }
 
