@@ -1,13 +1,13 @@
-import ContactList from './components/ContactList/ContactList';
 import ContactForm from './components/ContactForm/ContactForm';
+import ContactList from './components/ContactList/ContactList';
+import Header from './components/Header/Header';
+
 import './App.css';
 
 function App() {
   return (
     <div className="app">
-      <header>
-        <h1>Contact List</h1>
-      </header>
+      <Header />
       <div className="app-main">
         <ContactList />
         <ContactForm />

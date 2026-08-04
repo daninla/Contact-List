@@ -39,7 +39,6 @@ function ContactList() {
 
   return (
     <div className={styles.contactMainList}>
-      <h2>Contact List</h2>
       {isLoading ? (
         <ClipLoader />
       ) : contacts.length == 0 ? (

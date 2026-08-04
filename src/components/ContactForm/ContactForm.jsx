@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ErrorMessage, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 
+import { EMPTY_CONTACT } from '../../model/contact';
 import {
   addContact,
   clearCurrentContact,
@@ -14,11 +15,19 @@ import SuccessMessage from './SuccessMessage/SuccessMessage';
 
 import styles from './ContactForm.module.css';
 
+const phoneRegExp = /^[+\d][\d\s-]{6,14}\d$/;
+
 const validationSchema = Yup.object({
   firstName: Yup.string().trim().required('First name is required'),
   lastName: Yup.string().trim().required('Last name is required'),
-  phone: Yup.string().trim().required('Phone is required'),
-  email: Yup.string().email('Invalid email'),
+  phone: Yup.string()
+    .trim()
+    .matches(phoneRegExp, 'Invalid phone number')
+    .required('Phone is required'),
+  email: Yup.string()
+    .trim()
+    .email('Invalid email')
+    .required('Email is required'),
 });
 
 function ContactForm() {
@@ -48,9 +57,6 @@ function ContactForm() {
       dispatch(addContact(contact));
       return;
     }
-    if (JSON.stringify(contact) === JSON.stringify(currentContact)) {
-      return;
-    }
     dispatch(editContact(contact));
   };
 
@@ -61,7 +67,7 @@ function ContactForm() {
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {() => (
+      {({ isValid, dirty, resetForm }) => (
         <>
           <Form className={styles.formField}>
             <div className={styles.itemContainer}>
@@ -89,11 +95,15 @@ function ContactForm() {
             </div>
 
             <div className={styles.buttonContainer}>
-              <button type="submit" className={styles.saveButton}>
+              <button
+                type="submit"
+                className={styles.saveButton}
+                disabled={showMessage || !isValid || !dirty}
+              >
                 Save
               </button>
 
-              {currentContact.id && (
+              {currentContact.id ? (
                 <button
                   type="button"
                   className={styles.deleteButton}
@@ -101,17 +111,19 @@ function ContactForm() {
                 >
                   Delete
                 </button>
-              )}
+              ) : null}
+              <button
+                className={styles.newContactButton}
+                onClick={() => {
+                  resetForm({ values: EMPTY_CONTACT });
+                  dispatch(clearCurrentContact());
+                }}
+                type="button"
+              >
+                New
+              </button>
             </div>
           </Form>
-
-          <button
-            className="new-contact-button"
-            onClick={() => dispatch(clearCurrentContact())}
-            type="button"
-          >
-            New
-          </button>
         </>
       )}
     </Formik>

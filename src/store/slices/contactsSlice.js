@@ -83,11 +83,10 @@ const contactsSlice = createSlice({
       state.currentContact = payload;
       state.successEditCont = false;
     },
-
     clearCurrentContact(state) {
       state.currentContact = resetCurrentContact();
       state.successEditCont = false;
-    },
+    }
   },
 
   extraReducers: (builder) => {
@@ -133,7 +132,6 @@ const contactsSlice = createSlice({
   },
 });
 
-export const { selectContact, clearCurrentContact, hideElement } =
-  contactsSlice.actions;
+export const { selectContact, clearCurrentContact } = contactsSlice.actions;
 
 export default contactsSlice.reducer;

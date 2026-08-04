@@ -1,25 +1,18 @@
 {
   "contacts": [
     {
-      "id": "EUOEvaZ1kF4",
-      "firstName": "D",
-      "lastName": "ghbmjyhj",
-      "phone": "245556вакр",
-      "email": ""
+      "firstName": "wedfgv",
+      "lastName": "esdfwf",
+      "phone": "000000009",
+      "email": "wefsd@gg.dd",
+      "id": "PTFVEK4oweQ"
     },
     {
-      "id": "nlcPGcyTFVE",
-      "firstName": "вкеапр",
-      "lastName": "евра",
-      "phone": "123556",
-      "email": "idanila44@gmail.com"
-    },
-    {
-      "id": "_-Nxr6sXKFo",
-      "firstName": "",
-      "lastName": "vgb mg",
-      "phone": "",
-      "email": ""
+      "firstName": "eawsdf",
+      "lastName": "esdawfv",
+      "phone": "000000009",
+      "email": "dfg@g.df",
+      "id": "cH00asc_H_M"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
