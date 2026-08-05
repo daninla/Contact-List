@@ -1,18 +1,11 @@
 {
   "contacts": [
     {
-      "firstName": "wedfgv",
-      "lastName": "esdfwf",
-      "phone": "000000009",
-      "email": "wefsd@gg.dd",
-      "id": "PTFVEK4oweQ"
-    },
-    {
-      "firstName": "eawsdf",
-      "lastName": "esdawfv",
-      "phone": "000000009",
-      "email": "dfg@g.df",
-      "id": "cH00asc_H_M"
+      "id": "8WjgQ4bfEPo",
+      "firstName": "54ey",
+      "lastName": "ertyh",
+      "phone": "00000",
+      "email": "wefsd@gg.dd"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

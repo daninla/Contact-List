@@ -18,9 +18,6 @@ export default function Header() {
               display: 'flex',
               flexGrow: 1,
               justifyContent: 'center',
-              endIcon: {
-                marginLeft: '-100px',
-              },
             }}
           >
             Contact List
