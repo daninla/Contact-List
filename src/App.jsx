@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
-import ContactForm from './components/ContactForm/ContactForm';
-import ContactList from './components/ContactList/ContactList';
 import Header from './components/Header/Header';
-import { EMPTY_CONTACT } from './model/contact';
+import ContactForm from './features/contacts/components/ContactForm/ContactForm';
+import ContactList from './features/contacts/components/ContactList/ContactList';
+import { EMPTY_CONTACT } from './features/contacts/model/contact';
 
 import './App.css';
 

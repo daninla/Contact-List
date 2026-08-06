@@ -1,7 +1,6 @@
+import contactsApi from '@/features/contacts/api/contactsApi';
 import { configureStore } from '@reduxjs/toolkit';
 import { createLogger } from 'redux-logger';
-
-import contactsApi from './services/contactsApi';
 
 const logger = createLogger();
 

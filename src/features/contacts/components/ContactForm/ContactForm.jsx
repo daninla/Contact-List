@@ -1,15 +1,13 @@
-import { ErrorMessage, Form, Formik } from 'formik';
-
-import { EMPTY_CONTACT } from '../../model/contact';
+import ContactInput from '@/components/UI/ContactInput/ContactInput';
+import SuccessMessage from '@/components/UI/SuccessMessage/SuccessMessage';
 import {
   useAddContactMutation,
   useDeleteContactMutation,
   useEditContactMutation,
-} from '../../store/services/contactsApi';
-import { contactValidationSchema } from '../../utils/validationShemas';
-
-import ContactInput from './ContactInput/ContactInput';
-import SuccessMessage from './SuccessMessage/SuccessMessage';
+} from '@/features/contacts/api/contactsApi';
+import { EMPTY_CONTACT } from '@/features/contacts/model/contact';
+import { contactValidationSchema } from '@/utils/validationShemas';
+import { ErrorMessage, Form, Formik } from 'formik';
 
 import styles from './ContactForm.module.css';
 

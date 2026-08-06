@@ -6,6 +6,13 @@
       "lastName": "tgfh",
       "phone": "567456",
       "email": "efds@f"
+    },
+    {
+      "id": "sl9IG1yJ19Q",
+      "firstName": "ftg",
+      "lastName": "tgfhj",
+      "phone": "456",
+      "email": "wef@dff"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

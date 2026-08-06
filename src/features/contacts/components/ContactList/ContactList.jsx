@@ -1,11 +1,10 @@
-import { ClipLoader } from 'react-spinners';
-
+import ClipLoader from '@/components/UI/ClipLoader/ClipLoader';
 import {
   useDeleteContactMutation,
   useGetContactsQuery,
-} from '../../store/services/contactsApi';
+} from '@/features/contacts/api/contactsApi';
 
-import ContactItem from './ContactItem/ContactItem';
+import ContactItem from '../ContactItem/ContactItem';
 
 import styles from './ContactList.module.css';
 
