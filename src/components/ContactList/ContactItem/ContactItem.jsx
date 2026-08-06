@@ -2,9 +2,15 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-function ContactItem({ contact, deleteContact, selectContact }) {
+function ContactItem({
+  contact,
+  deleteContact,
+  selectContact,
+  handleClearSuccessEditContact,
+}) {
   const setDoubleClick = () => {
     selectContact(contact);
+    handleClearSuccessEditContact();
   };
 
   return (
@@ -39,6 +45,7 @@ function ContactItem({ contact, deleteContact, selectContact }) {
         onClick={(e) => {
           e.stopPropagation();
           deleteContact(contact.id);
+          handleClearSuccessEditContact();
         }}
         sx={{
           backgroundColor: '#1976d2',

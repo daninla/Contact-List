@@ -1,12 +1,11 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { ErrorMessage, Form, Formik } from 'formik';
 
+import { EMPTY_CONTACT } from '../../model/contact';
 import {
-  addContact,
-  clearCurrentContact,
-  editContact,
-  removeContact,
-} from '../../store/slices/contactsSlice';
+  useAddContactMutation,
+  useDeleteContactMutation,
+  useEditContactMutation,
+} from '../../store/services/contactsApi';
 import { contactValidationSchema } from '../../utils/validationShemas';
 
 import ContactInput from './ContactInput/ContactInput';
@@ -14,25 +13,32 @@ import SuccessMessage from './SuccessMessage/SuccessMessage';
 
 import styles from './ContactForm.module.css';
 
-function ContactForm() {
-  const dispatch = useDispatch();
+function ContactForm({
+  currentContact,
+  successEditCont,
+  setSuccessEditCont,
+  onResetForm,
+}) {
+  const initialValues = currentContact || EMPTY_CONTACT;
+  const [addContact] = useAddContactMutation();
+  const [editContact] = useEditContactMutation();
+  const [deleteContact] = useDeleteContactMutation();
 
-  const currentContact = useSelector(
-    (state) => state.contactsList.currentContact,
-  );
-
-  const showMessage = useSelector(
-    (state) => state.contactsList.successEditCont,
-  );
-
-  const initialValues = { ...(currentContact || '') };
-
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values) => {
     if (!currentContact.id) {
-      dispatch(addContact(values));
+      await addContact(values);
+      onResetForm();
     } else {
-      dispatch(editContact(values));
+      await editContact(values);
+      setSuccessEditCont();
     }
+  };
+  const clickByDelete = async () => {
+    await deleteContact(currentContact.id);
+    onResetForm();
+  };
+  const clickByNew = () => {
+    onResetForm();
   };
 
   return (
@@ -42,7 +48,7 @@ function ContactForm() {
       validationSchema={contactValidationSchema}
       onSubmit={handleSubmit}
     >
-      {({ isValid, dirty }) => (
+      {({ isValid, dirty, resetForm }) => (
         <>
           <Form className={styles.formField}>
             <div className={styles.itemContainer}>
@@ -66,14 +72,14 @@ function ContactForm() {
                 <ErrorMessage name="email" component="div" />
               </div>
 
-              {showMessage && <SuccessMessage />}
+              {successEditCont && <SuccessMessage />}
             </div>
 
             <div className={styles.buttonContainer}>
               <button
                 type="submit"
                 className={styles.saveButton}
-                disabled={showMessage || !isValid || !dirty}
+                disabled={successEditCont || !isValid || !dirty}
               >
                 Save
               </button>
@@ -82,7 +88,7 @@ function ContactForm() {
                 <button
                   type="button"
                   className={styles.deleteButton}
-                  onClick={() => dispatch(removeContact(currentContact.id))}
+                  onClick={clickByDelete}
                 >
                   Delete
                 </button>
@@ -90,7 +96,8 @@ function ContactForm() {
               <button
                 className={styles.newContactButton}
                 onClick={() => {
-                  dispatch(clearCurrentContact());
+                  clickByNew();
+                  resetForm();
                 }}
                 type="button"
               >
